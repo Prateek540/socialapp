@@ -96,18 +96,19 @@ export default function Post(props) {
               {isLiked ? (
                 <img
                   className="bigLikeIcon"
-                  src="/assets/like.png"
+                  src="/assets/heart.png"
                   alt=""
                   onClick={likeHandler}
                 />
               ) : (
-                <img
-                  className="smallLikeIcon"
-                  src="/assets/like.png"
-                  alt=""
-                  onClick={likeHandler}
-                />
+                <></>
               )}
+              <img
+                className="smallLikeIcon"
+                src="/assets/like.png"
+                alt=""
+                onClick={likeHandler}
+              />
 
               <span className="postLikeCounter">
                 {likeCount} people like it

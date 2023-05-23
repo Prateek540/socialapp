@@ -116,11 +116,28 @@ router.delete("/", auth, async (req, res) => {
   }
 });
 
+//isFollowed status by id
+
+router.get("/isFollowed/:id", auth, async (req, res) => {
+  console.log("AAYA");
+  try {
+    if (req.user.id !== req.params.id) {
+      const user = await User.findById(req.params.id);
+      if (user.followers.includes(req.user.id)) res.status(200).json(true);
+      else res.status(200).json(false);
+    } else {
+      res.status(403).json("You cannot follow yourself");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 //follow a user
 
 router.put("/:id/follow", auth, async (req, res) => {
-  if (req.user.id !== req.params.id) {
-    try {
+  try {
+    if (req.user.id !== req.params.id) {
       const user = await User.findById(req.params.id);
       const currentUser = await User.findById(req.user.id);
       if (!user.followers.includes(req.user.id)) {
@@ -130,11 +147,11 @@ router.put("/:id/follow", auth, async (req, res) => {
       } else {
         res.status(403).json("You already follow.");
       }
-    } catch (error) {
-      res.status(500).json(error);
+    } else {
+      res.status(403).json("You cannot follow yourself");
     }
-  } else {
-    res.status(403).json("You cannot follow yourself");
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 

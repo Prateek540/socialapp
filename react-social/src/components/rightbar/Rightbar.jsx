@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Online from "../online/Online";
 import "./rightbar.css";
 import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
@@ -28,6 +29,9 @@ export default function Rightbar({ profile }) {
     const [user, setUser] = useState({});
     const [userFriends, setUserFriends] = useState([]);
     const { jwtToken } = useContext(AuthContext);
+    const { currentUser } = useContext(AuthContext);
+    const [isFollowed, setIsFollowed] = useState(false);
+
     useEffect(() => {
       axios
         .get(`http://localhost:8000/api/users/${profile}`, {
@@ -55,21 +59,78 @@ export default function Rightbar({ profile }) {
         .catch((error) => {
           console.log(error);
         });
-    }, [user.username, jwtToken]);
-    const { currentUser } = useContext(AuthContext);
+    }, [jwtToken]);
+
+    useEffect(() => {
+      if (profile !== currentUser.username && user._id) {
+        axios
+          .get(`http://localhost:8000/api/users/isFollowed/${user._id}`, {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          })
+          .then((response) => {
+            setIsFollowed(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }, [user._id, jwtToken, currentUser.username]);
+
     const handleClick = () => {
-      window.location.reload();
+      if (isFollowed) {
+        //unfollow
+        axios
+          .put(
+            `http://localhost:8000/api/users/${user._id}/unfollow`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          )
+          .then(() => {
+            setIsFollowed(!isFollowed);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else if (!isFollowed) {
+        //follow
+        axios
+          .put(
+            `http://localhost:8000/api/users/${user._id}/follow`,
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          )
+          .then(() => {
+            setIsFollowed(!isFollowed);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     };
     return (
       <>
-        {profile === currentUser.username ? (
-          <></>
-        ) : (
-          <button onClick={handleClick} className="rightbarFollowButton">
-            Follow
-            <AddIcon />
-          </button>
-        )}
+        {profile !== currentUser.username &&
+          (isFollowed ? (
+            <button onClick={handleClick} className="rightbarFollowButton">
+              Unfollow
+              <RemoveIcon />
+            </button>
+          ) : (
+            <button onClick={handleClick} className="rightbarFollowButton">
+              Follow
+              <AddIcon />
+            </button>
+          ))}
 
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">

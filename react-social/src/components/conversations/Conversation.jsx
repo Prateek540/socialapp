@@ -3,13 +3,12 @@ import "./conversation.css";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
-function Conversation({ conversation, currentUser }) {
+function Conversation({ conversation, currentUser, setFriendUser }) {
   const [user, setUser] = useState({});
   const { jwtToken } = useContext(AuthContext);
 
   useEffect(() => {
     const friendId = conversation.members.find((m) => m !== currentUser._id);
-
     const getUser = async () => {
       try {
         const res = await axios(
@@ -21,12 +20,13 @@ function Conversation({ conversation, currentUser }) {
           }
         );
         setUser(res.data);
+        setFriendUser(res.data);
       } catch (error) {
         console.log(error);
       }
     };
     getUser();
-  }, [currentUser, conversation, jwtToken]);
+  }, [currentUser, conversation, jwtToken, setFriendUser]);
   return (
     <>
       <div className="conversation">

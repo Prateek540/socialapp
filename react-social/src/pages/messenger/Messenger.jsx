@@ -12,14 +12,39 @@ function Messenger() {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const { currentUser } = useContext(AuthContext);
   const scrollRef = useRef();
-  const [socket, setSocket] = useState(null);
+  const socket = useRef();
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   useEffect(() => {
-    setSocket(io("ws://localhost:8900"));
+    socket.current = io("ws://localhost:8900");
+
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
   }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", currentUser._id);
+    socket.current.on("getUsers", (users) => {
+      setOnlineUsers(
+        currentUser.following.filter((f) => users.some((u) => u.userId === f))
+      );
+    });
+  }, [currentUser]);
 
   useEffect(() => {
     const getConversations = async () => {
@@ -57,6 +82,16 @@ function Messenger() {
       conversationId: currentChat._id,
     };
 
+    const receiverId = currentChat.members.find(
+      (member) => member !== currentUser._id
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: currentUser._id,
+      receiverId,
+      text: newMessage,
+    });
+
     try {
       const res = await axios.post(
         `http://localhost:8000/api/messages`,
@@ -73,6 +108,8 @@ function Messenger() {
     scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [messages]);
 
+  const [friendUser, setFriendUser] = useState({});
+
   return (
     <>
       <Topbar />
@@ -87,7 +124,11 @@ function Messenger() {
             {conversations.map((conv) => {
               return (
                 <div key={conv._id} onClick={() => setCurrentChat(conv)}>
-                  <Conversation currentUser={currentUser} conversation={conv} />
+                  <Conversation
+                    setFriendUser={setFriendUser}
+                    currentUser={currentUser}
+                    conversation={conv}
+                  />
                 </div>
               );
             })}
@@ -99,8 +140,10 @@ function Messenger() {
               <>
                 <div className="chatBoxTop">
                   {messages.map((msg) => (
-                    <div ref={scrollRef}>
+                    <div ref={scrollRef} key={msg._id}>
                       <Message
+                        myProfile={currentUser}
+                        otherProfile={friendUser}
                         message={msg}
                         own={msg.sender === currentUser._id}
                       />
@@ -129,7 +172,11 @@ function Messenger() {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-            <ChatOnline />
+            <ChatOnline
+              onlineUsers={onlineUsers}
+              currentId={currentUser._id}
+              setCurrentChat={setCurrentChat}
+            />
           </div>
         </div>
       </div>

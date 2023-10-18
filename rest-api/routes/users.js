@@ -67,7 +67,6 @@ router.get("/friends/:id", auth, async (req, res) => {
 
 router.get("/friends/username/:username", auth, async (req, res) => {
   try {
-    console.log(req.params.username);
     const user = await User.findOne({ username: req.params.username });
     const friends = await Promise.all(
       user.following.map((friendId) => {
@@ -119,7 +118,6 @@ router.delete("/", auth, async (req, res) => {
 //isFollowed status by id
 
 router.get("/isFollowed/:id", auth, async (req, res) => {
-  console.log("AAYA");
   try {
     if (req.user.id !== req.params.id) {
       const user = await User.findById(req.params.id);

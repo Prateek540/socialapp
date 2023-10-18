@@ -33,7 +33,7 @@
 }
 
 .loginBox {
-  height: 400px;
+  height: 500px;
   padding: 20px;
   background-color: white;
   border-radius: 10px;
@@ -61,9 +61,9 @@
   cursor: pointer;
 }
 
-.loginForgot {
-  text-align: center;
-  color: #1775ee;
+.ValidationMessage {
+  font-size: 14px;
+  color: #e81414;
 }
 
 .loginRegisterButton {

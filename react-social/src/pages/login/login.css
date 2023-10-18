@@ -69,6 +69,11 @@
   cursor: not-allowed;
 }
 
+.ValidationMessage {
+  font-size: 14;
+  color: #e81414;
+}
+
 .loginForgot {
   text-align: center;
   color: #1775ee;

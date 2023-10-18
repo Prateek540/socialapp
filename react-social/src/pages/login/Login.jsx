@@ -1,4 +1,4 @@
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginSuccess, LoginFailure } from "../../context/AuthActions";
@@ -8,8 +8,14 @@ import axios from "axios";
 export default function Login() {
   const email = useRef();
   const password = useRef();
-
   const navigate = useNavigate();
+
+  const [error, setError] = useState({
+    emailError: "",
+    passwordError: "",
+  });
+
+  const [server, setServer] = useState("");
 
   const { dispatch } = useContext(AuthContext);
 
@@ -19,6 +25,30 @@ export default function Login() {
       email: email.current.value,
       password: password.current.value,
     };
+
+    const newError = {
+      emailError: "",
+      passwordError: "",
+    };
+
+    setError(newError);
+
+    if (data.email === "") {
+      newError.emailError = "Email is empty";
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+      newError.emailError = "Email is incorrect";
+    }
+
+    if (data.password === "") {
+      newError.passwordError = "Password is empty";
+    } else if (data.password.length < 6 || data.password.length > 20) {
+      newError.passwordError = "Password limit is 6 to 20 characters";
+    }
+
+    if (newError.emailError !== "" || newError.passwordError !== "") {
+      setError(newError);
+      return;
+    }
 
     axios
       .post("http://localhost:8000/api/auth/login", data)
@@ -32,8 +62,8 @@ export default function Login() {
         localStorage.setItem("isAuthenticated", true);
         navigate("/");
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        setServer(err.response.data);
         dispatch(LoginFailure());
       });
   };
@@ -55,12 +85,18 @@ export default function Login() {
                 className="loginInput"
                 placeholder="Email"
               />
+              {error.emailError !== "" && (
+                <span className="ValidationMessage">{error.emailError}</span>
+              )}
               <input
                 ref={password}
                 type="password"
                 className="loginInput"
                 placeholder="Password"
               />
+              {error.passwordError !== "" && (
+                <span className="ValidationMessage">{error.passwordError}</span>
+              )}
               <button
                 onClick={submitHandler}
                 type="submit"
@@ -68,6 +104,9 @@ export default function Login() {
               >
                 Log in
               </button>
+              {server !== "" && (
+                <span className="ValidationMessage">{server}</span>
+              )}
               <span className="loginForgot">Forgot Password</span>
               <button
                 className="loginRegisterButton"

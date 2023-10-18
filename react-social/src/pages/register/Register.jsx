@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import "./register.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,13 +6,20 @@ import { LoginSuccess, LoginFailure } from "../../context/AuthActions";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Register() {
-  const username = useRef("PRATEEK");
+  const username = useRef();
   const email = useRef();
   const password = useRef();
-  const passwordAgain = useRef();
   const navigate = useNavigate();
 
   const { dispatch } = useContext(AuthContext);
+
+  const [error, setError] = useState({
+    usernameError: "",
+    emailError: "",
+    passwordError: "",
+  });
+
+  const [server, setServer] = useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -21,6 +28,41 @@ export default function Register() {
       email: email.current.value,
       password: password.current.value,
     };
+
+    const newError = {
+      usernameError: "",
+      emailError: "",
+      passwordError: "",
+    };
+
+    setError(newError);
+
+    if (data.username === "") {
+      newError.usernameError = "Username is empty";
+    } else if (data.username.length > 20 || data.username.length < 6) {
+      newError.usernameError = "Username must be between 6 to 20 characters";
+    }
+
+    if (data.email === "") {
+      newError.emailError = "Email is empty";
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {
+      newError.emailError = "Email is incorrect";
+    }
+
+    if (data.password === "") {
+      newError.passwordError = "Password is empty";
+    } else if (data.password.length < 6 || data.password.length > 20) {
+      newError.passwordError = "Password limit is 6 to 20 characters";
+    }
+
+    if (
+      newError.emailError !== "" ||
+      newError.passwordError !== "" ||
+      newError.usernameError !== ""
+    ) {
+      setError(newError);
+      return;
+    }
 
     axios
       .post("http://localhost:8000/api/auth/register", data)
@@ -34,8 +76,8 @@ export default function Register() {
         localStorage.setItem("isAuthenticated", true);
         navigate("/");
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        setServer("Username and password must be unique");
         dispatch(LoginFailure());
       });
   };
@@ -57,24 +99,27 @@ export default function Register() {
                 className="loginInput"
                 placeholder="Username"
               />
+              {error.usernameError !== "" && (
+                <span className="ValidationMessage">{error.usernameError}</span>
+              )}
               <input
                 ref={email}
                 type="email"
                 className="loginInput"
                 placeholder="Email"
               />
+              {error.emailError !== "" && (
+                <span className="ValidationMessage">{error.emailError}</span>
+              )}
               <input
                 ref={password}
                 type="password"
                 className="loginInput"
                 placeholder="Password"
               />
-              <input
-                ref={passwordAgain}
-                type="password"
-                className="loginInput"
-                placeholder="Password Again"
-              />
+              {error.passwordError !== "" && (
+                <span className="ValidationMessage">{error.passwordError}</span>
+              )}
               <button
                 type="submit"
                 onClick={submitHandler}
@@ -82,6 +127,9 @@ export default function Register() {
               >
                 Sign up
               </button>
+              {server !== "" && (
+                <span className="ValidationMessage">{server}</span>
+              )}
               <button
                 onClick={(e) => e.preventDefault()}
                 className="loginRegisterButton"

@@ -4,12 +4,16 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import { format } from "timeago.js";
 
 export default function Post(props) {
   const { jwtToken } = useContext(AuthContext);
   const [postUser, setPostUser] = useState({});
   const [likeCount, setLikeCount] = useState(props.post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
+  console.log(postUser.profilePicture);
 
   useEffect(() => {
     axios
@@ -81,7 +85,7 @@ export default function Post(props) {
                 />
               </Link>
               <span className="postUsername">{postUser.username}</span>
-              <span className="postDate">5 mins ago</span>
+              <span className="postDate">{format(postUser.updatedAt)}</span>
             </div>
             <div className="postTopRight">
               <MoreVertIcon />
@@ -94,24 +98,18 @@ export default function Post(props) {
           <div className="postBottom">
             <div className="postBottomLeft">
               {isLiked ? (
-                <img
-                  className="bigLikeIcon"
-                  src="/assets/heart.png"
-                  alt=""
+                <ThumbUpAltIcon className="bigLikeIcon" onClick={likeHandler} />
+              ) : (
+                <ThumbUpOffAltIcon
+                  className="smallLikeIcon"
                   onClick={likeHandler}
                 />
-              ) : (
-                <></>
               )}
-              <img
-                className="smallLikeIcon"
-                src="/assets/like.png"
-                alt=""
-                onClick={likeHandler}
-              />
 
               <span className="postLikeCounter">
-                {likeCount} people like it
+                {isLiked
+                  ? `You and ${likeCount - 1} other liked it`
+                  : `${likeCount} people liked it`}
               </span>
             </div>
             <div className="postBottomRight">

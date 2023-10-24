@@ -8,11 +8,16 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
+import ImgsViewer from "react-images-viewer";
 
 export default function Profile() {
   const params = useParams();
   const { jwtToken } = useContext(AuthContext);
   const [user, setUser] = useState({});
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [currImg, setCurrImg] = useState(0);
+
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/users/${params.username}`, {
@@ -35,11 +40,42 @@ export default function Profile() {
         <div className="profileRight">
           <div className="profileRightTop">
             <div className="profileCover">
-              <img src={user.coverPicture} className="profileCoverImg" alt="" />
+              <ImgsViewer
+                imgs={[
+                  {
+                    src: user.coverPicture,
+                  },
+                  {
+                    src: user.profilePicture,
+                  },
+                ]}
+                currImg={currImg}
+                showThumbnails={true}
+                isOpen={isOpen}
+                onClickPrev={() => setCurrImg(currImg - 1)}
+                onClickNext={() => setCurrImg(currImg + 1)}
+                onClickThumbnail={(index) => setCurrImg(index)}
+                onClose={(e) => setIsOpen(false)}
+              />
+              <img
+                src={user.coverPicture}
+                className="profileCoverImg"
+                alt="coverPic"
+                onContextMenu={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  setIsOpen(true);
+                  setCurrImg(0);
+                }}
+              />
               <img
                 src={user.profilePicture}
                 className="profileUserImg"
-                alt=""
+                alt="ProfilePic"
+                onContextMenu={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  setIsOpen(true);
+                  setCurrImg(1);
+                }}
               />
             </div>
             <div className="profileInfo">

@@ -13,7 +13,6 @@ export default function Post(props) {
   const [postUser, setPostUser] = useState({});
   const [likeCount, setLikeCount] = useState(props.post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
-  console.log(postUser.profilePicture);
 
   useEffect(() => {
     axios

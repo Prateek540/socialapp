@@ -24,7 +24,7 @@ export default function Topbar() {
           },
         }
       )
-      .then((response) => {
+      .then(() => {
         navigate("/login");
       })
       .catch((error) => {
@@ -79,7 +79,7 @@ export default function Topbar() {
           <img
             onClick={logoutHandler}
             src={currentUser.profilePicture}
-            alt=""
+            alt="logout"
             className="topbarImg"
           />
         </div>

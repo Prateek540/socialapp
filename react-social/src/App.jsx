@@ -13,7 +13,7 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={isAuthenticated ? <Home /> : <Login />} />
+          <Route path="/*" element={isAuthenticated ? <Home /> : <Login />} />
           <Route
             path="/profile/:username"
             element={isAuthenticated ? <Profile /> : <Login />}

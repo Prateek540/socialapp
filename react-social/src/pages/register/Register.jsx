@@ -4,8 +4,11 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginSuccess, LoginFailure } from "../../context/AuthActions";
 import { AuthContext } from "../../context/AuthContext";
+import PermMediaIcon from "@mui/icons-material/PermMedia";
 
 export default function Register() {
+  const profile = useRef();
+  const cover = useRef();
   const username = useRef();
   const email = useRef();
   const password = useRef();
@@ -14,15 +17,19 @@ export default function Register() {
   const { dispatch } = useContext(AuthContext);
 
   const [error, setError] = useState({
+    profileError: "",
+    coverError: "",
     usernameError: "",
     emailError: "",
     passwordError: "",
   });
 
-  const [server, setServer] = useState("");
+  const [server, setServer] = useState(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log(profile.current.files[0]);
+    console.log(cover.current.files[0]);
     const data = {
       username: username.current.value,
       email: email.current.value,
@@ -30,6 +37,8 @@ export default function Register() {
     };
 
     const newError = {
+      profileError: "",
+      coverError: "",
       usernameError: "",
       emailError: "",
       passwordError: "",
@@ -77,7 +86,13 @@ export default function Register() {
         navigate("/");
       })
       .catch((err) => {
-        setServer("Username and password must be unique");
+        if (err.response?.data) {
+          if (typeof err.response.data === "string")
+            setServer(err.response.data);
+          else setServer("Username or email already in use.");
+        } else {
+          setServer("Server is offline please try again !!!");
+        }
         dispatch(LoginFailure());
       });
   };
@@ -93,6 +108,28 @@ export default function Register() {
           </div>
           <div className="loginRight">
             <form className="loginBox">
+              <input
+                ref={profile}
+                type="file"
+                style={{ display: "none" }}
+                accept=".jpg,.jpeg,.png"
+                id="file1"
+              />
+              <label className="imageLabel" htmlFor="file1">
+                <PermMediaIcon />
+                <span className="imageDescription">Profile Image</span>
+              </label>
+              <input
+                ref={cover}
+                type="file"
+                style={{ display: "none" }}
+                accept=".jpg,.jpeg,.png"
+                id="file2"
+              />
+              <label className="imageLabel" htmlFor="file2">
+                <PermMediaIcon />
+                <span className="imageDescription">Cover Image</span>
+              </label>
               <input
                 ref={username}
                 type="text"

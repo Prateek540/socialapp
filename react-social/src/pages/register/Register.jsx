@@ -28,9 +28,10 @@ export default function Register() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(profile.current.files[0]);
-    console.log(cover.current.files[0]);
+
     const data = {
+      profilePicture: profile.current.files[0],
+      coverPicture: cover.current.files[0],
       username: username.current.value,
       email: email.current.value,
       password: password.current.value,
@@ -44,7 +45,28 @@ export default function Register() {
       passwordError: "",
     };
 
+    const isValidFile = (file) => {
+      const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+      const maxFileSize = 1024 * 1024; // 1MB
+
+      return allowedTypes.includes(file.type) && file.size <= maxFileSize;
+    };
+
     setError(newError);
+
+    if (!data.profilePicture) {
+      newError.profileError = "Please upload profile picture";
+    } else if (!isValidFile(data.profilePicture)) {
+      newError.profileError =
+        "Only .jpg, .jpeg and .png format allowed with file size less than 1 mb";
+    }
+
+    if (!data.coverPicture) {
+      newError.coverError = "Please upload cover picture";
+    } else if (!isValidFile(data.coverPicture)) {
+      newError.coverError =
+        "Only .jpg, .jpeg and .png format allowed with file size less than 1 mb";
+    }
 
     if (data.username === "") {
       newError.usernameError = "Username is empty";
@@ -118,7 +140,13 @@ export default function Register() {
               <label className="imageLabel" htmlFor="file1">
                 <PermMediaIcon />
                 <span className="imageDescription">Profile Image</span>
+                {error.usernameError !== "" && (
+                  <span className="ValidationMessage">
+                    {error.profileError}
+                  </span>
+                )}
               </label>
+
               <input
                 ref={cover}
                 type="file"
@@ -129,6 +157,9 @@ export default function Register() {
               <label className="imageLabel" htmlFor="file2">
                 <PermMediaIcon />
                 <span className="imageDescription">Cover Image</span>
+                {error.usernameError !== "" && (
+                  <span className="ValidationMessage">{error.coverError}</span>
+                )}
               </label>
               <input
                 ref={username}

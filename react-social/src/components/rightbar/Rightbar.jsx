@@ -153,7 +153,7 @@ export default function Rightbar({ profile }) {
             return (
               <div key={friends._id} className="rightbarFollowing">
                 <img
-                  src={friends.profilePicture}
+                  src={`/${friends.profilePicture}`}
                   alt=""
                   className="rightbarFollowingImg"
                 />

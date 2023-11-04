@@ -78,7 +78,7 @@ export default function Topbar() {
           </div>
           <img
             onClick={logoutHandler}
-            src={currentUser.profilePicture}
+            src={`/${currentUser.profilePicture}`}
             alt="logout"
             className="topbarImg"
           />

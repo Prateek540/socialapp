@@ -43,10 +43,10 @@ export default function Profile() {
               <ImgsViewer
                 imgs={[
                   {
-                    src: user.coverPicture,
+                    src: `/${user.coverPicture}`,
                   },
                   {
-                    src: user.profilePicture,
+                    src: `/${user.profilePicture}`,
                   },
                 ]}
                 currImg={currImg}
@@ -58,7 +58,7 @@ export default function Profile() {
                 onClose={(e) => setIsOpen(false)}
               />
               <img
-                src={user.coverPicture}
+                src={`/${user.coverPicture}`}
                 className="profileCoverImg"
                 alt="coverPic"
                 onContextMenu={(e) => e.preventDefault()}
@@ -68,7 +68,7 @@ export default function Profile() {
                 }}
               />
               <img
-                src={user.profilePicture}
+                src={`/${user.profilePicture}`}
                 className="profileUserImg"
                 alt="ProfilePic"
                 onContextMenu={(e) => e.preventDefault()}

@@ -23,7 +23,7 @@ export default function Share({ username }) {
           <div className="shareWrapper">
             <div className="shareTop">
               <img
-                src={currentUser.profilePicture}
+                src={`/${currentUser.profilePicture}`}
                 className="shareProfileImg"
                 alt=""
               />

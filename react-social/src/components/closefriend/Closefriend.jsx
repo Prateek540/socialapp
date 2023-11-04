@@ -32,7 +32,7 @@ export default function Closefriend() {
             <Link to={link} style={{ textDecoration: "none" }}>
               <img
                 className="sidebarFriendImg"
-                src={friend.profilePicture}
+                src={`/${friend.profilePicture}`}
                 alt=""
               />
             </Link>

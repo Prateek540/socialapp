@@ -97,6 +97,13 @@ userSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
+userSchema.statics.isValidFile = function (file) {
+  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+  const maxFileSize = 1024 * 1024; // 1MB
+
+  return allowedTypes.includes(file.mimetype) && file.size <= maxFileSize;
+};
+
 userSchema.pre("deleteOne", { document: true }, async function (next) {
   try {
     const posts = await Post.find({ userId: this._id });

@@ -20,7 +20,7 @@ export default function Profile() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/users/${params.username}`, {
+      .get(`/api/users/${params.username}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

@@ -11,12 +11,12 @@ export default function Rightbar({ profile }) {
     return (
       <>
         <div className="birthdayContainer">
-          <img src="/assets/gift.png" alt="" className="birthdayImg" />
+          <img src="public/assets/gift.png" alt="" className="birthdayImg" />
           <span className="birthdayText">
             <b>Prateek</b> and <b>3 other friends</b> have birthday today
           </span>
         </div>
-        <img src="/assets/ad.png" alt="" className="rightbarAd" />
+        <img src="public/assets/ad.png" alt="" className="rightbarAd" />
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
           <Online />
@@ -34,7 +34,7 @@ export default function Rightbar({ profile }) {
 
     useEffect(() => {
       axios
-        .get(`http://localhost:8000/api/users/${profile}`, {
+        .get(`/api/users/${profile}`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -48,7 +48,7 @@ export default function Rightbar({ profile }) {
     }, [jwtToken]);
     useEffect(() => {
       axios
-        .get(`http://localhost:8000/api/users/friends/username/${profile}`, {
+        .get(`/api/users/friends/username/${profile}`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -64,7 +64,7 @@ export default function Rightbar({ profile }) {
     useEffect(() => {
       if (profile !== currentUser.username && user._id) {
         axios
-          .get(`http://localhost:8000/api/users/isFollowed/${user._id}`, {
+          .get(`/api/users/isFollowed/${user._id}`, {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
@@ -83,7 +83,7 @@ export default function Rightbar({ profile }) {
         //unfollow
         axios
           .put(
-            `http://localhost:8000/api/users/${user._id}/unfollow`,
+            `/api/users/${user._id}/unfollow`,
             {},
             {
               headers: {
@@ -101,7 +101,7 @@ export default function Rightbar({ profile }) {
         //follow
         axios
           .put(
-            `http://localhost:8000/api/users/${user._id}/follow`,
+            `/api/users/${user._id}/follow`,
             {},
             {
               headers: {

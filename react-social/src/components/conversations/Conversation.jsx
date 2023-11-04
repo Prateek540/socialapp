@@ -11,14 +11,11 @@ function Conversation({ conversation, currentUser, setFriendUser }) {
     const friendId = conversation.members.find((m) => m !== currentUser._id);
     const getUser = async () => {
       try {
-        const res = await axios(
-          `http://localhost:8000/api/users/getuser/${friendId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const res = await axios(`/api/users/getuser/${friendId}`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setUser(res.data);
         setFriendUser(res.data);
       } catch (error) {

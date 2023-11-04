@@ -16,7 +16,7 @@ export default function Post(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/users/getuser/${props.post.userId}`, {
+      .get(`/api/users/getuser/${props.post.userId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -31,7 +31,7 @@ export default function Post(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/posts/${props.post._id}/likestatus`, {
+      .get(`/api/posts/${props.post._id}/likestatus`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -47,7 +47,7 @@ export default function Post(props) {
   const likeHandler = () => {
     axios
       .put(
-        `http://localhost:8000/api/posts/${props.post._id}/like`,
+        `/api/posts/${props.post._id}/like`,
         {},
         {
           headers: {

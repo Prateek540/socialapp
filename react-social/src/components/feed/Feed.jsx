@@ -11,7 +11,7 @@ export default function Feed({ username }) {
   useEffect(() => {
     if (username) {
       axios
-        .get(`http://localhost:8000/api/posts/profile/${username}`, {
+        .get(`/api/posts/profile/${username}`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -24,7 +24,7 @@ export default function Feed({ username }) {
         });
     } else {
       axios
-        .get("http://localhost:8000/api/posts/timeline", {
+        .get("/api/posts/timeline", {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },

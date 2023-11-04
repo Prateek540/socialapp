@@ -51,7 +51,7 @@ export default function Login() {
     }
 
     axios
-      .post("http://localhost:8000/api/auth/login", data)
+      .post("/api/auth/login", data)
       .then((response) => {
         console.log(response);
         dispatch(LoginSuccess(response.data.token, response.data.other));

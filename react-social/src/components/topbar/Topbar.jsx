@@ -16,7 +16,7 @@ export default function Topbar() {
   const logoutHandler = () => {
     axios
       .post(
-        "http://localhost:8000/api/auth/logoutAll",
+        "/api/auth/logoutAll",
         {},
         {
           headers: {

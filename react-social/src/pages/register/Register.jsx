@@ -30,8 +30,8 @@ export default function Register() {
     e.preventDefault();
 
     const data = {
-      profilePicture: profile.current.files[0],
-      coverPicture: cover.current.files[0],
+      file1: profile.current.files[0],
+      file2: cover.current.files[0],
       username: username.current.value,
       email: email.current.value,
       password: password.current.value,
@@ -54,16 +54,16 @@ export default function Register() {
 
     setError(newError);
 
-    if (!data.profilePicture) {
+    if (!data.file1) {
       newError.profileError = "Please upload profile picture";
-    } else if (!isValidFile(data.profilePicture)) {
+    } else if (!isValidFile(data.file1)) {
       newError.profileError =
         "Only .jpg, .jpeg and .png format allowed with file size less than 1 mb";
     }
 
-    if (!data.coverPicture) {
+    if (!data.file2) {
       newError.coverError = "Please upload cover picture";
-    } else if (!isValidFile(data.coverPicture)) {
+    } else if (!isValidFile(data.file2)) {
       newError.coverError =
         "Only .jpg, .jpeg and .png format allowed with file size less than 1 mb";
     }
@@ -96,8 +96,13 @@ export default function Register() {
     }
 
     axios
-      .post("http://localhost:8000/api/auth/register", data)
+      .post("/api/auth/register", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
+        console.log(response);
         dispatch(LoginSuccess(response.data.token, response.data.other));
         localStorage.setItem("jwtToken", response.data.token);
         localStorage.setItem(
@@ -108,6 +113,7 @@ export default function Register() {
         navigate("/");
       })
       .catch((err) => {
+        console.log(err);
         if (err.response?.data) {
           if (typeof err.response.data === "string")
             setServer(err.response.data);
@@ -132,6 +138,7 @@ export default function Register() {
             <form className="loginBox">
               <input
                 ref={profile}
+                name="file1"
                 type="file"
                 style={{ display: "none" }}
                 accept=".jpg,.jpeg,.png"
@@ -149,6 +156,7 @@ export default function Register() {
 
               <input
                 ref={cover}
+                name="file1"
                 type="file"
                 style={{ display: "none" }}
                 accept=".jpg,.jpeg,.png"

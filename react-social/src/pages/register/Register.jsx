@@ -12,6 +12,10 @@ export default function Register() {
   const username = useRef();
   const email = useRef();
   const password = useRef();
+  const description = useRef();
+  const city = useRef();
+  const from = useRef();
+  const relationship = useRef();
   const navigate = useNavigate();
 
   const { dispatch } = useContext(AuthContext);
@@ -22,6 +26,10 @@ export default function Register() {
     usernameError: "",
     emailError: "",
     passwordError: "",
+    descriptionError: "",
+    cityError: "",
+    fromError: "",
+    relationshipError: "",
   });
 
   const [server, setServer] = useState(null);
@@ -35,6 +43,10 @@ export default function Register() {
       username: username.current.value,
       email: email.current.value,
       password: password.current.value,
+      description: description.current.value,
+      city: city.current.value,
+      from: from.current.value,
+      relationship: relationship.current.value,
     };
 
     const newError = {
@@ -43,11 +55,15 @@ export default function Register() {
       usernameError: "",
       emailError: "",
       passwordError: "",
+      descriptionError: "",
+      cityError: "",
+      fromError: "",
+      relationshipError: "",
     };
 
     const isValidFile = (file) => {
       const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-      const maxFileSize = 1024 * 1024; // 1MB
+      const maxFileSize = 1024 * 1024 * 5; // 5MB
 
       return allowedTypes.includes(file.type) && file.size <= maxFileSize;
     };
@@ -86,10 +102,33 @@ export default function Register() {
       newError.passwordError = "Password limit is 6 to 20 characters";
     }
 
+    if (data.description === "") {
+      newError.descriptionError = "Description is empty";
+    } else if (data.description.length < 10 || data.description.length > 50) {
+      newError.descriptionError =
+        "Description should be in 10 to 50 characters";
+    }
+
+    if (data.city === "") {
+      newError.cityError = "City is empty";
+    }
+
+    if (data.from === "") {
+      newError.fromError = "From is empty";
+    }
+
+    if (data.relationship === "") {
+      newError.relationshipError = "Relationship is empty";
+    }
+
     if (
       newError.emailError !== "" ||
       newError.passwordError !== "" ||
-      newError.usernameError !== ""
+      newError.usernameError !== "" ||
+      newError.descriptionError !== "" ||
+      newError.cityError !== "" ||
+      newError.fromError !== "" ||
+      newError.relationshipError !== ""
     ) {
       setError(newError);
       return;
@@ -126,16 +165,16 @@ export default function Register() {
   };
   return (
     <>
-      <div className="login">
-        <div className="loginWrapper">
-          <div className="loginLeft">
-            <h3 className="loginLogo">Social App</h3>
-            <span className="loginDesc">
+      <div className="register">
+        <div className="registerWrapper">
+          <div className="registerLeft">
+            <h3 className="registerLogo">Social App</h3>
+            <span className="registerDesc">
               Connect with friends on social app
             </span>
           </div>
-          <div className="loginRight">
-            <form className="loginBox">
+          <div className="registerRight">
+            <form className="registerBox">
               <input
                 ref={profile}
                 name="file1"
@@ -144,11 +183,11 @@ export default function Register() {
                 accept=".jpg,.jpeg,.png"
                 id="file1"
               />
-              <label className="imageLabel" htmlFor="file1">
+              <label className="registerImageLabel" htmlFor="file1">
                 <PermMediaIcon />
-                <span className="imageDescription">Profile Image</span>
+                <span className="registerImageDescription">Profile Image</span>
                 {error.usernameError !== "" && (
-                  <span className="ValidationMessage">
+                  <span className="registerValidationMessage">
                     {error.profileError}
                   </span>
                 )}
@@ -162,53 +201,105 @@ export default function Register() {
                 accept=".jpg,.jpeg,.png"
                 id="file2"
               />
-              <label className="imageLabel" htmlFor="file2">
+              <label className="registerImageLabel" htmlFor="file2">
                 <PermMediaIcon />
-                <span className="imageDescription">Cover Image</span>
+                <span className="registerImageDescription">Cover Image</span>
                 {error.usernameError !== "" && (
-                  <span className="ValidationMessage">{error.coverError}</span>
+                  <span className="registerValidationMessage">
+                    {error.coverError}
+                  </span>
                 )}
               </label>
               <input
                 ref={username}
                 type="text"
-                className="loginInput"
+                className="registerInput"
                 placeholder="Username"
               />
               {error.usernameError !== "" && (
-                <span className="ValidationMessage">{error.usernameError}</span>
+                <span className="registerValidationMessage">
+                  {error.usernameError}
+                </span>
               )}
               <input
                 ref={email}
                 type="email"
-                className="loginInput"
+                className="registerInput"
                 placeholder="Email"
               />
               {error.emailError !== "" && (
-                <span className="ValidationMessage">{error.emailError}</span>
+                <span className="registerValidationMessage">
+                  {error.emailError}
+                </span>
               )}
               <input
                 ref={password}
                 type="password"
-                className="loginInput"
+                className="registerInput"
                 placeholder="Password"
               />
               {error.passwordError !== "" && (
-                <span className="ValidationMessage">{error.passwordError}</span>
+                <span className="registerValidationMessage">
+                  {error.passwordError}
+                </span>
+              )}
+              <input
+                ref={description}
+                type="text"
+                className="registerInput"
+                placeholder="Description"
+              />
+              {error.descriptionError !== "" && (
+                <span className="registerValidationMessage">
+                  {error.descriptionError}
+                </span>
+              )}
+              <input
+                ref={city}
+                type="text"
+                className="registerInput"
+                placeholder="City"
+              />
+              {error.cityError !== "" && (
+                <span className="registerValidationMessage">
+                  {error.cityError}
+                </span>
+              )}
+              <input
+                ref={from}
+                type="text"
+                className="registerInput"
+                placeholder="From"
+              />
+              {error.fromError !== "" && (
+                <span className="registerValidationMessage">
+                  {error.fromError}
+                </span>
+              )}
+              <input
+                ref={relationship}
+                type="text"
+                className="registerInput"
+                placeholder="Relationship"
+              />
+              {error.relationshipError !== "" && (
+                <span className="registerValidationMessage">
+                  {error.relationshipError}
+                </span>
               )}
               <button
                 type="submit"
                 onClick={submitHandler}
-                className="loginButton"
+                className="registerButton"
               >
                 Sign up
               </button>
               {server !== "" && (
-                <span className="ValidationMessage">{server}</span>
+                <span className="registerValidationMessage">{server}</span>
               )}
               <button
                 onClick={(e) => e.preventDefault()}
-                className="loginRegisterButton"
+                className="registerRegisterButton"
               >
                 <Link
                   to="/login"

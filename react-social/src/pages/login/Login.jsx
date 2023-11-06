@@ -88,7 +88,9 @@ export default function Login() {
                 placeholder="Email"
               />
               {error.emailError !== "" && (
-                <span className="ValidationMessage">{error.emailError}</span>
+                <span className="loginValidationMessage">
+                  {error.emailError}
+                </span>
               )}
               <input
                 ref={password}
@@ -97,7 +99,9 @@ export default function Login() {
                 placeholder="Password"
               />
               {error.passwordError !== "" && (
-                <span className="ValidationMessage">{error.passwordError}</span>
+                <span className="loginValidationMessage">
+                  {error.passwordError}
+                </span>
               )}
               <button
                 onClick={submitHandler}
@@ -107,7 +111,7 @@ export default function Login() {
                 Log in
               </button>
               {server !== "" && (
-                <span className="ValidationMessage">{server}</span>
+                <span className="loginValidationMessage">{server}</span>
               )}
               <span className="loginForgot">Forgot Password</span>
               <button

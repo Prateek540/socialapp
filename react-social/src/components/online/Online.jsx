@@ -6,7 +6,7 @@ export default function Online() {
       <li className="rightbarFriend">
         <div className="rightbarProfileImgContainer">
           <img
-            src="public/assets/person/3.jpeg"
+            src="public/assets/User.png"
             alt=""
             className="rightbarProfileImg"
           />
@@ -17,7 +17,7 @@ export default function Online() {
       <li className="rightbarFriend">
         <div className="rightbarProfileImgContainer">
           <img
-            src="public/assets/person/3.jpeg"
+            src="public/assets/User.png"
             alt=""
             className="rightbarProfileImg"
           />
@@ -28,7 +28,7 @@ export default function Online() {
       <li className="rightbarFriend">
         <div className="rightbarProfileImgContainer">
           <img
-            src="public/assets/person/3.jpeg"
+            src="public/assets/User.png"
             alt=""
             className="rightbarProfileImg"
           />
@@ -39,7 +39,7 @@ export default function Online() {
       <li className="rightbarFriend">
         <div className="rightbarProfileImgContainer">
           <img
-            src="public/assets/person/3.jpeg"
+            src="public/assets/User.png"
             alt=""
             className="rightbarProfileImg"
           />
@@ -50,7 +50,7 @@ export default function Online() {
       <li className="rightbarFriend">
         <div className="rightbarProfileImgContainer">
           <img
-            src="public/assets/person/3.jpeg"
+            src="public/assets/User.png"
             alt=""
             className="rightbarProfileImg"
           />
@@ -61,7 +61,7 @@ export default function Online() {
       <li className="rightbarFriend">
         <div className="rightbarProfileImgContainer">
           <img
-            src="public/assets/person/3.jpeg"
+            src="public/assets/User.png"
             alt=""
             className="rightbarProfileImg"
           />

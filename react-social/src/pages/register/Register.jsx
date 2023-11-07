@@ -74,14 +74,14 @@ export default function Register() {
       newError.profileError = "Please upload profile picture";
     } else if (!isValidFile(data.file1)) {
       newError.profileError =
-        "Only .jpg, .jpeg and .png format allowed with file size less than 1 mb";
+        "Only .jpg, .jpeg and .png format allowed with file size less than 5 mb";
     }
 
     if (!data.file2) {
       newError.coverError = "Please upload cover picture";
     } else if (!isValidFile(data.file2)) {
       newError.coverError =
-        "Only .jpg, .jpeg and .png format allowed with file size less than 1 mb";
+        "Only .jpg, .jpeg and .png format allowed with file size less than 5 mb";
     }
 
     if (data.username === "") {

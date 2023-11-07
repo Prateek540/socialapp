@@ -78,7 +78,7 @@ export default function Post(props) {
             <div className="postTopLeft">
               <Link to={link}>
                 <img
-                  src={postUser.profilePicture}
+                  src={`/${postUser.profilePicture}`}
                   alt=""
                   className="postProfileImg"
                 />
@@ -92,7 +92,7 @@ export default function Post(props) {
           </div>
           <div className="postCenter">
             <span className="postText"> {props.post.description}</span>
-            <img src={props.post.image} className="postImg" alt="" />
+            <img src={`/${props.post.image}`} className="postImg" alt="" />
           </div>
           <div className="postBottom">
             <div className="postBottomLeft">

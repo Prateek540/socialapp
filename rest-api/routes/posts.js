@@ -2,11 +2,27 @@ const router = require("express").Router();
 const Post = require("../model/post");
 const User = require("../model/user");
 const auth = require("../middleware/auth");
+const upload = require("../app");
 
 //create
 
-router.post("/", auth, async (req, res) => {
-  const newPost = new Post({ ...req.body, userId: req.user.id });
+router.post("/", auth, upload.fields([{ name: "image" }]), async (req, res) => {
+  const file = req.files["image"][0];
+  if (!file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  if (!User.isValidFile(file)) {
+    return res.status(400).json({ error: "Invalid file type or size." });
+  }
+
+  const { path: path1 } = file;
+
+  const newPost = new Post({
+    userId: req.user.id,
+    description: req.body.description,
+    image: path1,
+  });
   try {
     const savedPost = await newPost.save();
     res.status(200).json(savedPost);

@@ -16,6 +16,7 @@ const postSchema = mongoose.Schema(
     image: {
       type: String,
       default: "",
+      required: true,
     },
     likes: {
       type: Array,
@@ -24,5 +25,12 @@ const postSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+postSchema.statics.isValidFile = function (file) {
+  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+  const maxFileSize = 1024 * 1024 * 5; // 1MB
+
+  return allowedTypes.includes(file.mimetype) && file.size <= maxFileSize;
+};
 
 module.exports = mongoose.model("Post", postSchema);

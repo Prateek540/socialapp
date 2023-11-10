@@ -100,3 +100,8 @@
 .rightbarFollowButton:focus {
   outline: none;
 }
+
+.interactbuttons {
+  display: flex;
+  gap: 10px;
+}

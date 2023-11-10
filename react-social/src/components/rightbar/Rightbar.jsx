@@ -3,8 +3,10 @@ import Online from "../online/Online";
 import "./rightbar.css";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import TelegramIcon from "@mui/icons-material/Telegram";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Rightbar({ profile }) {
   const HomeRightbar = () => {
@@ -31,6 +33,7 @@ export default function Rightbar({ profile }) {
     const { jwtToken } = useContext(AuthContext);
     const { currentUser } = useContext(AuthContext);
     const [isFollowed, setIsFollowed] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
       axios
@@ -117,20 +120,55 @@ export default function Rightbar({ profile }) {
           });
       }
     };
+
+    const startChat = () => {
+      axios
+        .get(`/api/conversations/exist/${currentUser._id}/${user._id}`)
+        .then((result) => {
+          console.log(result.data);
+          if (result.data === false) {
+            const data = {
+              senderId: currentUser._id,
+              receiverId: user._id,
+            };
+            axios
+              .post(`/api/conversations/`, data)
+              .then((result) => {
+                window.location.reload();
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+          navigate("/messenger");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
     return (
       <>
-        {profile !== currentUser.username &&
-          (isFollowed ? (
-            <button onClick={handleClick} className="rightbarFollowButton">
-              Unfollow
-              <RemoveIcon />
+        <div className="interactbuttons">
+          {profile !== currentUser.username &&
+            (isFollowed ? (
+              <button onClick={handleClick} className="rightbarFollowButton">
+                Unfollow
+                <RemoveIcon />
+              </button>
+            ) : (
+              <button onClick={handleClick} className="rightbarFollowButton">
+                Follow
+                <AddIcon />
+              </button>
+            ))}
+
+          {profile !== currentUser.username && (
+            <button onClick={startChat} className="rightbarFollowButton">
+              <TelegramIcon />
             </button>
-          ) : (
-            <button onClick={handleClick} className="rightbarFollowButton">
-              Follow
-              <AddIcon />
-            </button>
-          ))}
+          )}
+        </div>
 
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">

@@ -41,4 +41,18 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
   }
 });
 
+//check conv of two userids exist or not
+
+router.get("/exist/:firstUserId/:secondUserId", async (req, res) => {
+  try {
+    const conversation = await Conversation.findOne({
+      members: { $all: [req.params.firstUserId, req.params.secondUserId] },
+    });
+    if (conversation) res.status(200).json(true);
+    else res.status(200).json(false);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

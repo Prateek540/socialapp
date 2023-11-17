@@ -13,6 +13,11 @@ export default function Post(props) {
   const [postUser, setPostUser] = useState({});
   const [likeCount, setLikeCount] = useState(props.post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const showComment = () => {
+    setShow(!show);
+  };
 
   useEffect(() => {
     axios
@@ -112,9 +117,12 @@ export default function Post(props) {
               </span>
             </div>
             <div className="postBottomRight">
-              <div className="postCommentText">5 comments</div>
+              <div className="postCommentText" onClick={showComment}>
+                Comment
+              </div>
             </div>
           </div>
+          {show && <div className="postComment">DIKHEGA</div>}
         </div>
       </div>
     </>

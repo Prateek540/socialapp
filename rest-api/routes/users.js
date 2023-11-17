@@ -32,6 +32,7 @@ router.get("/getuser/:id", auth, async (req, res) => {
 });
 
 //get any user by username
+
 router.get("/:username", auth, async (req, res) => {
   try {
     const user = await User.findOne({ username: req.params.username });

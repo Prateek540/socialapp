@@ -7,13 +7,17 @@ import { AuthContext } from "../../context/AuthContext";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import { format } from "timeago.js";
+import Comments from "../comment/Comments";
+import SendIcon from "@mui/icons-material/Send";
 
 export default function Post(props) {
-  const { jwtToken } = useContext(AuthContext);
+  const { jwtToken, currentUser } = useContext(AuthContext);
   const [postUser, setPostUser] = useState({});
   const [likeCount, setLikeCount] = useState(props.post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [show, setShow] = useState(false);
+  const [postComment, setPostComment] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
   const showComment = () => {
     setShow(!show);
@@ -49,6 +53,21 @@ export default function Post(props) {
       });
   }, [jwtToken, props.post._id]);
 
+  useEffect(() => {
+    axios
+      .get(`/api/comments/getComments/${props.post._id}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
+      .then((response) => {
+        setPostComment(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [jwtToken, props.post._id]);
+
   const likeHandler = () => {
     axios
       .put(
@@ -73,7 +92,27 @@ export default function Post(props) {
       });
   };
 
-  const link = `/profile/${postUser.username}`;
+  const handleComment = () => {
+    if (newComment === "") {
+      return;
+    }
+    const data = {
+      text: newComment,
+    };
+    axios
+      .post(`/api/comments/${props.post._id}/${currentUser._id}`, data, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
+      .then((response) => {
+        setNewComment("");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -81,7 +120,7 @@ export default function Post(props) {
         <div className="postWrapper">
           <div className="postTop">
             <div className="postTopLeft">
-              <Link to={link}>
+              <Link to={`/profile/${postUser.username}`}>
                 <img
                   src={`/${postUser.profilePicture}`}
                   alt=""
@@ -122,7 +161,33 @@ export default function Post(props) {
               </div>
             </div>
           </div>
-          {show && <div className="postComment">DIKHEGA</div>}
+          {show && (
+            <div className="postCommentArea">
+              {postComment.map((comment) => {
+                console.log(comment);
+                return (
+                  <Comments
+                    id={comment.userId}
+                    key={comment._id}
+                    text={comment.text}
+                  />
+                );
+              })}
+              <div className="commentBoxBottom">
+                <input
+                  type="text"
+                  placeholder="comment here"
+                  className="commentMessageInput"
+                  onChange={(e) => setNewComment(e.target.value)}
+                  value={newComment}
+                />
+                <SendIcon
+                  onClick={handleComment}
+                  className="commentSubmitButton"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>

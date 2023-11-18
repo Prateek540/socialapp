@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 export default function Closefriend() {
   const [friendList, setFriendList] = useState([]);
   const { jwtToken } = useContext(AuthContext);
-  console.log(friendList);
 
   useEffect(() => {
     axios

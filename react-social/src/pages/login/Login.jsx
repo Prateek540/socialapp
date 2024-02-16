@@ -53,7 +53,6 @@ export default function Login() {
     axios
       .post("/api/auth/login", data)
       .then((response) => {
-        console.log(response);
         dispatch(LoginSuccess(response.data.token, response.data.other));
         localStorage.setItem("jwtToken", response.data.token);
         localStorage.setItem(
@@ -64,8 +63,7 @@ export default function Login() {
         navigate("/");
       })
       .catch((err) => {
-        if (err.response?.data) setServer(err.response.data);
-        else setServer("Server is offline please try again !!!");
+        setServer("Server error please try again !!!");
         dispatch(LoginFailure());
       });
   };

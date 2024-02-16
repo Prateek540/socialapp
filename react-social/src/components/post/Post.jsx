@@ -128,7 +128,7 @@ export default function Post(props) {
                 />
               </Link>
               <span className="postUsername">{postUser.username}</span>
-              <span className="postDate">{format(postUser.updatedAt)}</span>
+              <span className="postDate">{format(postUser.createdAt)}</span>
             </div>
             <div className="postTopRight">
               <MoreVertIcon />
@@ -164,7 +164,6 @@ export default function Post(props) {
           {show && (
             <div className="postCommentArea">
               {postComment.map((comment) => {
-                console.log(comment);
                 return (
                   <Comments
                     id={comment.userId}

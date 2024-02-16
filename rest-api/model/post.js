@@ -28,7 +28,7 @@ const postSchema = mongoose.Schema(
 
 postSchema.statics.isValidFile = function (file) {
   const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-  const maxFileSize = 1024 * 1024 * 5; // 1MB
+  const maxFileSize = 1024 * 1024 * 5; // 5MB
 
   return allowedTypes.includes(file.mimetype) && file.size <= maxFileSize;
 };

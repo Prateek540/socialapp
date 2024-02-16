@@ -24,7 +24,6 @@ router.post(
     const { path: path2 } = file2;
     try {
       const salt = await bcrypt.genSalt(10);
-      console.log(req.body.username);
       const newPassword = req.body.password.toString();
       const hashedPassword = await bcrypt.hash(newPassword, salt);
       const newUser = new User({
@@ -55,18 +54,18 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      res.status(404).send("User not found");
+      return res.status(404).send("User not found");
     }
     const newPassword = req.body.password.toString();
     const validPassword = await bcrypt.compare(newPassword, user.password);
     if (!validPassword) {
-      res.status(400).send("Wrong Password");
+      return res.status(400).send("Wrong Password");
     }
     const token = await user.generateAuthToken();
     const { password, tokens, __v, ...other } = user._doc;
     res.status(200).send({ other, token });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).send(error);
   }
 });
 

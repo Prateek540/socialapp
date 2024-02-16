@@ -122,6 +122,8 @@ export default function Register() {
     }
 
     if (
+      newError.profileError !== "" ||
+      newError.coverError !== "" ||
       newError.emailError !== "" ||
       newError.passwordError !== "" ||
       newError.usernameError !== "" ||
@@ -141,7 +143,6 @@ export default function Register() {
         },
       })
       .then((response) => {
-        console.log(response);
         dispatch(LoginSuccess(response.data.token, response.data.other));
         localStorage.setItem("jwtToken", response.data.token);
         localStorage.setItem(
@@ -152,14 +153,7 @@ export default function Register() {
         navigate("/");
       })
       .catch((err) => {
-        console.log(err);
-        if (err.response?.data) {
-          if (typeof err.response.data === "string")
-            setServer(err.response.data);
-          else setServer("Username or email already in use.");
-        } else {
-          setServer("Server is offline please try again !!!");
-        }
+        setServer("Server error please try again !!!");
         dispatch(LoginFailure());
       });
   };
@@ -186,7 +180,7 @@ export default function Register() {
               <label className="registerImageLabel" htmlFor="file1">
                 <PermMediaIcon />
                 <span className="registerImageDescription">Profile Image</span>
-                {error.usernameError !== "" && (
+                {error.profileError !== "" && (
                   <span className="registerValidationMessage">
                     {error.profileError}
                   </span>
@@ -204,7 +198,7 @@ export default function Register() {
               <label className="registerImageLabel" htmlFor="file2">
                 <PermMediaIcon />
                 <span className="registerImageDescription">Cover Image</span>
-                {error.usernameError !== "" && (
+                {error.coverError !== "" && (
                   <span className="registerValidationMessage">
                     {error.coverError}
                   </span>
